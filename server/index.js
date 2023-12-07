@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import { getApiHealth } from "./controllers/health.js";
 
 const app = express();
 app.use(express.json());
@@ -18,6 +19,8 @@ async function connectMongoDB() {
   }
 }
 connectMongoDB();
+
+app.get("/api/health", getApiHealth);
 
 const PORT = process.env.PORT || 5000;
 
