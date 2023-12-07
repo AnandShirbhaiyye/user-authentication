@@ -2,7 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import { getApiHealth } from "./controllers/health.js";
-import { postApiSignup } from "./controllers/user.js";
+import { postApiLogin, postApiSignup } from "./controllers/user.js";
 
 const app = express();
 app.use(express.json());
@@ -24,6 +24,8 @@ connectMongoDB();
 app.get("/api/health", getApiHealth);
 
 app.post("/api/signup", postApiSignup);
+
+app.post("/api/login", postApiLogin);
 
 const PORT = process.env.PORT || 5000;
 

@@ -17,4 +17,32 @@ const postApiSignup = async (req, res) => {
   });
 };
 
-export { postApiSignup };
+const postApiLogin = async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.json({
+      success: false,
+      message: "please provide email and password",
+    });
+  }
+  const user = await User.findOne({
+    email: email,
+    password: password,
+  }).select("username email");
+
+  if (user) {
+    return res.json({
+      success: true,
+      data: user,
+      message: "login successfull...",
+    });
+  } else {
+    return res.json({
+      success: false,
+      message: "invalid credentials...",
+    });
+  }
+};
+
+export { postApiSignup, postApiLogin };
