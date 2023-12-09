@@ -6,11 +6,11 @@ const postApiSignup = async (req, res) => {
     const { username, email, password } = req.body;
 
     if (!email || !password || !username) {
-        return res.json({
-          success: false,
-          message: "Please enter all fields",
-        });
-      }
+      return res.json({
+        success: false,
+        message: "Please enter all fields",
+      });
+    }
     const signupObj = new User({
       username,
       email,
@@ -28,7 +28,7 @@ const postApiSignup = async (req, res) => {
     const token = jwt.sign(
       { userId: savedUser._id, isAdmin: true },
       process.env.SECRET_KEYS,
-      { expiresIn: "1h" } 
+      { expiresIn: "1h" }
     );
 
     res.json({
@@ -56,7 +56,9 @@ const postApiLogin = async (req, res) => {
       });
     }
 
-    const user = await User.findOne({ email, password }).select("username email");
+    const user = await User.findOne({ email, password }).select(
+      "username email"
+    );
 
     if (user) {
       if (!process.env.SECRET_KEYS) {
@@ -68,7 +70,7 @@ const postApiLogin = async (req, res) => {
       const token = jwt.sign(
         { userId: user._id, isAdmin: true },
         process.env.SECRET_KEYS,
-        { expiresIn: "1h" } 
+        { expiresIn: "1h" }
       );
 
       return res.json({
@@ -92,6 +94,34 @@ const postApiLogin = async (req, res) => {
   }
 };
 
-export { postApiSignup, postApiLogin };
+const postapiRegister = async (req, res) => {
+  try {
+    const { username, email, password } = req.body;
 
+    if (!username || !email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
 
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already exists" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = new User({
+      username,
+      email,
+      password: hashedPassword,
+    });
+
+    await newUser.save();
+
+    res.status(201).json({ message: "User registered successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export { postApiSignup, postApiLogin, postapiRegister };

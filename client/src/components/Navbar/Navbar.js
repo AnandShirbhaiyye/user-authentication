@@ -1,6 +1,14 @@
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 function Navbar() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storageUser = JSON.parse(localStorage.getItem("user") || "{}");
+    setUser(storageUser);
+  }, []);
+
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -37,6 +45,26 @@ function Navbar() {
                 </Link>
               </li>
             </ul>
+          </div>
+          <div className="navbar-user-container">
+            {user ? (
+              <>
+                Hello, {user.username}
+                <span
+                  className="navbar-logout btn btn-outline-secondary btn-sm"
+                  onClick={() => {
+                    localStorage.removeItem("user");
+                    window.location.href = "/login";
+                  }}
+                >
+                  Logout
+                </span>
+              </>
+            ) : (
+              <span>
+                Hello, user
+              </span>
+            )}
           </div>
         </div>
       </nav>

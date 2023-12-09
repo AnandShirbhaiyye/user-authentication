@@ -60,6 +60,11 @@ export default function Login() {
           <button type="button" className="btn btn-primary w-100 mb-3" onClick={login}>
             Login
           </button>
+
+          <button type="button" className="btn btn-primary w-100 mb-3">
+            forgot password
+          </button>
+
           <p className="text-center">
             You have no account?
             <Link to="/signup" className="link-text">

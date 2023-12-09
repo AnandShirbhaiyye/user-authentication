@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import validator from "validator";
 
 const userSchema = new Schema({
   username: {
@@ -9,11 +10,18 @@ const userSchema = new Schema({
     type: String,
     required: true,
     unique: true,
+    validate: {
+      validator: validator.isEmail,
+      message: "Invalid email format",
+    },
   },
   password: {
     type: String,
     required: true,
+    minlength: 6,
   },
+  resetToken: String,
+  resetTokenExpiration: Date,
 });
 
 const User = model("User", userSchema);
